@@ -41,8 +41,10 @@ function start() {
 					type: "input",
 					message: "How much of the item would you like to order?",
 				}
+				
 			])
 			.then(function (answer) {
+				console.log("\n---------------------------------------------------------\n");
 				var index = res.findIndex(item => item.item_id.toString() === answer.id);
 				var newAmount = res[index].quantity - answer.amount;
 				if(newAmount >= 0){
@@ -58,11 +60,12 @@ function start() {
 						],
 						function (error) {
 							if (error) throw error;
-							console.log("Item was bought successfully")
+							console.log("Item was bought successfully".bold.green)
+							console.log("Your total is : $".bold.green + answer.amount * res[index].price);
 							start()
 					})
 				} else {
-					console.log("You require additional pylons".bold.red);
+					console.log("INSUFFICIENT QUANTITY".bold.red);
 					start();
 				}
 			})
