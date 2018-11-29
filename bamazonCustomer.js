@@ -44,22 +44,27 @@ function start() {
 			])
 			.then(function (answer) {
 				var index = res.findIndex(item => item.item_id.toString() === answer.id);
-				connection.query(
-					"UPDATE products SET ? WHERE ?",
-					[
-						{
-							quantity: res[index].quantity - answer.amount
-						},
-						{
-							item_id: answer.id
-						}
-					],
-					function (error) {
-						if (error) throw error;
-						console.log("Item was bought successfully")
-						start()
-					}
-				)
+				var newAmount = res[index].quantity - answer.amount;
+				if(newAmount >= 0){
+					connection.query(
+						"UPDATE products SET ? WHERE ?",
+						[
+							{
+								quantity: newAmount
+							},
+							{
+								item_id: answer.id
+							}
+						],
+						function (error) {
+							if (error) throw error;
+							console.log("Item was bought successfully")
+							start()
+					})
+				} else {
+					console.log("You require additional pylons".bold.red);
+					start();
+				}
 			})
 	})
 }
